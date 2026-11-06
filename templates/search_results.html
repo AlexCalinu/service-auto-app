@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Cautare rapida</p>
+        <h1>Rezultate pentru "{{ plate }}"</h1>
+    </div>
+</div>
+
+{% if car %}
+<div class="row g-4">
+    <div class="col-12 col-lg-4">
+        <section class="content-block">
+            <h2>Date masina</h2>
+            <dl class="details-list">
+                <dt>Numar</dt><dd>{{ car.license_plate }}</dd>
+                <dt>Masina</dt><dd>{{ car.make }} {{ car.model }}</dd>
+                <dt>An</dt><dd>{{ car.year }}</dd>
+                <dt>VIN</dt><dd>{{ car.vin or "-" }}</dd>
+                <dt>Motorizare</dt><dd>{{ car.engine or "-" }}</dd>
+            </dl>
+        </section>
+        <section class="content-block mt-4">
+            <h2>Date client</h2>
+            <dl class="details-list">
+                <dt>Nume</dt><dd>{{ car.client.name }}</dd>
+                <dt>Telefon</dt><dd>{{ car.client.phone }}</dd>
+                <dt>Email</dt><dd>{{ car.client.email or "-" }}</dd>
+                <dt>Observatii</dt><dd>{{ car.client.notes or "-" }}</dd>
+            </dl>
+        </section>
+    </div>
+    <div class="col-12 col-lg-8">
+        <section class="content-block">
+            <div class="block-title">
+                <h2>Istoric interventii</h2>
+                <a href="{{ url_for('car_details', car_id=car.id) }}">Pagina masinii</a>
+            </div>
+            <div class="timeline">
+                {% for repair in repairs %}
+                    <article class="timeline-item">
+                        <div class="timeline-top">
+                            <strong>{{ repair.entry_date.strftime("%d.%m.%Y") }}</strong>
+                            <span class="badge status-badge">{{ repair.status }}</span>
+                        </div>
+                        <p>{{ repair.problem }}</p>
+                        {% if repair.work_done %}<p><span>Lucrare:</span> {{ repair.work_done }}</p>{% endif %}
+                        <div class="timeline-cost">Total: {{ "%.2f"|format(repair.total_cost) }} lei</div>
+                    </article>
+                {% else %}
+                    <p class="text-muted mb-0">Nu exista interventii pentru aceasta masina.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% else %}
+<section class="content-block">
+    <form class="row g-2" action="{{ url_for('search') }}">
+        <div class="col-12 col-md-8">
+            <input class="form-control form-control-lg" name="plate" placeholder="Introdu numarul de inmatriculare" value="{{ plate }}">
+        </div>
+        <div class="col-12 col-md-4">
+            <button class="btn btn-primary btn-lg w-100">Cauta masina</button>
+        </div>
+    </form>
+</section>
+{% endif %}
+{% endblock %}

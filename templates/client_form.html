@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Client</p>
+        <h1>{{ "Editare client" if client else "Adaugare client" }}</h1>
+    </div>
+</div>
+
+<section class="form-block">
+    <form method="post">
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="name">Nume</label>
+                <input class="form-control" id="name" name="name" value="{{ client.name if client else '' }}" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="phone">Telefon</label>
+                <input class="form-control" id="phone" name="phone" value="{{ client.phone if client else '' }}" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="email">Email optional</label>
+                <input class="form-control" id="email" name="email" type="email" value="{{ client.email if client and client.email else '' }}">
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="notes">Observatii</label>
+                <textarea class="form-control" id="notes" name="notes" rows="4">{{ client.notes if client and client.notes else '' }}</textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-outline-secondary" href="{{ url_for('clients') }}">Renunta</a>
+            <button class="btn btn-primary" type="submit">Salveaza</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

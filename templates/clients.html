@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Evidenta</p>
+        <h1>Clienti</h1>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('add_client') }}">Adauga client</a>
+</div>
+
+<section class="content-block">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Telefon</th>
+                <th>Email</th>
+                <th>Observatii</th>
+                <th class="text-end">Actiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for client in clients %}
+                <tr>
+                    <td class="fw-semibold">{{ client.name }}</td>
+                    <td>{{ client.phone }}</td>
+                    <td>{{ client.email or "-" }}</td>
+                    <td>{{ client.notes or "-" }}</td>
+                    <td class="table-actions">
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('edit_client', client_id=client.id) }}">Editare</a>
+                        <form method="post" action="{{ url_for('delete_client', client_id=client.id) }}" onsubmit="return confirmDelete('Stergi clientul si masinile lui?')">
+                            <button class="btn btn-sm btn-outline-danger">Stergere</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5" class="text-muted">Nu exista clienti.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

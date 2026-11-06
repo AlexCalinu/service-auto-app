@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Masina</p>
+        <h1>{{ "Editare masina" if car else "Adaugare masina" }}</h1>
+    </div>
+</div>
+
+<section class="form-block">
+    <form method="post">
+        <div class="row g-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="client_id">Client</label>
+                <select class="form-select" id="client_id" name="client_id" required>
+                    {% for client in clients %}
+                        <option value="{{ client.id }}" {% if car and car.client_id == client.id %}selected{% endif %}>{{ client.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="license_plate">Numar de inmatriculare</label>
+                <input class="form-control text-uppercase" id="license_plate" name="license_plate" value="{{ car.license_plate if car else '' }}" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="make">Marca</label>
+                <input class="form-control" id="make" name="make" value="{{ car.make if car else '' }}" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="model">Model</label>
+                <input class="form-control" id="model" name="model" value="{{ car.model if car else '' }}" required>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="year">An fabricatie</label>
+                <input class="form-control" id="year" name="year" type="number" min="1950" max="2100" value="{{ car.year if car else '' }}" required>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="vin">VIN optional</label>
+                <input class="form-control" id="vin" name="vin" value="{{ car.vin if car and car.vin else '' }}">
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="engine">Motorizare optionala</label>
+                <input class="form-control" id="engine" name="engine" value="{{ car.engine if car and car.engine else '' }}">
+            </div>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-outline-secondary" href="{{ url_for('cars') }}">Renunta</a>
+            <button class="btn btn-primary" type="submit">Salveaza</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

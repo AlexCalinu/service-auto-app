@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Istoric masina</p>
+        <h1>{{ car.display_name }}</h1>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('add_repair') }}">Adauga lucrare</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-4">
+        <section class="content-block">
+            <h2>Date masina</h2>
+            <dl class="details-list">
+                <dt>Client</dt><dd>{{ car.client.name }}</dd>
+                <dt>Telefon</dt><dd>{{ car.client.phone }}</dd>
+                <dt>Marca / model</dt><dd>{{ car.make }} {{ car.model }}</dd>
+                <dt>An</dt><dd>{{ car.year }}</dd>
+                <dt>VIN</dt><dd>{{ car.vin or "-" }}</dd>
+                <dt>Motorizare</dt><dd>{{ car.engine or "-" }}</dd>
+            </dl>
+        </section>
+    </div>
+    <div class="col-12 col-lg-8">
+        <section class="content-block">
+            <div class="block-title">
+                <h2>Interventii</h2>
+            </div>
+            <div class="timeline">
+                {% for repair in repairs %}
+                    <article class="timeline-item">
+                        <div class="timeline-top">
+                            <strong>{{ repair.entry_date.strftime("%d.%m.%Y") }}</strong>
+                            <span class="badge status-badge">{{ repair.status }}</span>
+                        </div>
+                        <p class="mb-2">{{ repair.problem }}</p>
+                        {% if repair.diagnosis %}<p><span>Constatare:</span> {{ repair.diagnosis }}</p>{% endif %}
+                        {% if repair.work_done %}<p><span>Lucrare:</span> {{ repair.work_done }}</p>{% endif %}
+                        {% if repair.parts_changed %}<p><span>Piese:</span> {{ repair.parts_changed }}</p>{% endif %}
+                        <div class="timeline-cost">Total: {{ "%.2f"|format(repair.total_cost) }} lei</div>
+                        <form method="post" action="{{ url_for('update_repair_status', repair_id=repair.id) }}" class="status-form mt-3">
+                            <select class="form-select form-select-sm" name="status">
+                                {% for status in statuses %}
+                                    <option value="{{ status }}" {% if repair.status == status %}selected{% endif %}>{{ status }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary">Actualizeaza</button>
+                        </form>
+                    </article>
+                {% else %}
+                    <p class="text-muted mb-0">Aceasta masina nu are inca interventii.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

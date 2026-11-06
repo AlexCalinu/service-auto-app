@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Lucrare</p>
+        <h1>{{ "Editare lucrare" if repair else "Adaugare lucrare" }}</h1>
+    </div>
+</div>
+
+<section class="form-block">
+    <form method="post">
+        <div class="row g-3">
+            <div class="col-12 col-lg-6">
+                <label class="form-label" for="car_id">Masina</label>
+                <select class="form-select" id="car_id" name="car_id" required>
+                    {% for car in cars %}
+                        <option value="{{ car.id }}" {% if repair and repair.car_id == car.id %}selected{% endif %}>{{ car.display_name }} - {{ car.client.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label" for="entry_date">Data intrarii</label>
+                <input class="form-control" id="entry_date" name="entry_date" type="date" value="{{ repair.entry_date.isoformat() if repair and repair.entry_date else '' }}" required>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <label class="form-label" for="status">Status</label>
+                <select class="form-select" id="status" name="status">
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if repair and repair.status == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="problem">Problema declarata de client</label>
+                <textarea class="form-control" id="problem" name="problem" rows="3" required>{{ repair.problem if repair else '' }}</textarea>
+            </div>
+            <div class="col-12 col-lg-6">
+                <label class="form-label" for="diagnosis">Diagnostic / constatare</label>
+                <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3">{{ repair.diagnosis if repair and repair.diagnosis else '' }}</textarea>
+            </div>
+            <div class="col-12 col-lg-6">
+                <label class="form-label" for="work_done">Lucrarea efectuata</label>
+                <textarea class="form-control" id="work_done" name="work_done" rows="3">{{ repair.work_done if repair and repair.work_done else '' }}</textarea>
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="parts_changed">Piese schimbate</label>
+                <textarea class="form-control" id="parts_changed" name="parts_changed" rows="2">{{ repair.parts_changed if repair and repair.parts_changed else '' }}</textarea>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="parts_cost">Cost piese</label>
+                <input class="form-control cost-input" id="parts_cost" name="parts_cost" type="number" step="0.01" min="0" value="{{ repair.parts_cost if repair else '0' }}">
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="labor_cost">Cost manopera</label>
+                <input class="form-control cost-input" id="labor_cost" name="labor_cost" type="number" step="0.01" min="0" value="{{ repair.labor_cost if repair else '0' }}">
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label" for="total_cost">Cost total automat</label>
+                <input class="form-control" id="total_cost" value="{{ repair.total_cost if repair else '0.00' }}" readonly>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label" for="completion_date">Data finalizarii</label>
+                <input class="form-control" id="completion_date" name="completion_date" type="date" value="{{ repair.completion_date.isoformat() if repair and repair.completion_date else '' }}">
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="notes">Observatii</label>
+                <textarea class="form-control" id="notes" name="notes" rows="3">{{ repair.notes if repair and repair.notes else '' }}</textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-outline-secondary" href="{{ url_for('repairs') }}">Renunta</a>
+            <button class="btn btn-primary" type="submit">Salveaza</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

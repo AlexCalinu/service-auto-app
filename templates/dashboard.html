@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <p class="section-label">Panou principal</p>
+        <h1>Dashboard service</h1>
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('add_repair') }}">Adauga lucrare</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+        <div class="metric-card">
+            <span>Clienti</span>
+            <strong>{{ clients_count }}</strong>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="metric-card">
+            <span>Masini</span>
+            <strong>{{ cars_count }}</strong>
+        </div>
+    </div>
+    <div class="col-12 col-md-4">
+        <div class="metric-card">
+            <span>Lucrari</span>
+            <strong>{{ repairs_count }}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-xl-6">
+        <section class="content-block">
+            <div class="block-title">
+                <h2>Lucrari in lucru</h2>
+            </div>
+            {% if active_repairs %}
+                <div class="responsive-list">
+                    {% for repair in active_repairs %}
+                        <article class="work-item">
+                            <div>
+                                <a href="{{ url_for('car_details', car_id=repair.car.id) }}" class="fw-semibold">{{ repair.car.display_name }}</a>
+                                <p>{{ repair.problem }}</p>
+                                <span class="badge text-bg-primary">{{ repair.status }}</span>
+                            </div>
+                            <form method="post" action="{{ url_for('update_repair_status', repair_id=repair.id) }}" class="status-form">
+                                <select class="form-select form-select-sm" name="status">
+                                    {% for status in statuses %}
+                                        <option value="{{ status }}" {% if repair.status == status %}selected{% endif %}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-sm btn-outline-primary">Salveaza</button>
+                            </form>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted mb-0">Nu exista lucrari marcate ca In lucru.</p>
+            {% endif %}
+        </section>
+    </div>
+    <div class="col-12 col-xl-6">
+        <section class="content-block">
+            <div class="block-title">
+                <h2>Ultimele lucrari</h2>
+                <a href="{{ url_for('repairs') }}">Vezi toate</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Masina</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for repair in latest_repairs %}
+                        <tr>
+                            <td>{{ repair.entry_date.strftime("%d.%m.%Y") }}</td>
+                            <td><a href="{{ url_for('car_details', car_id=repair.car.id) }}">{{ repair.car.display_name }}</a></td>
+                            <td><span class="badge status-badge">{{ repair.status }}</span></td>
+                            <td>{{ "%.2f"|format(repair.total_cost) }} lei</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="4" class="text-muted">Nu exista lucrari.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

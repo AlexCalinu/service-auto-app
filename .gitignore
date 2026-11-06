@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+
+# Baza de date locala (se creeaza automat la prima rulare)
+instance/
+*.db
+*.sqlite3
+
+# Variabile de mediu / chei
+.env
+
+# IDE
+.idea/
+.vscode/
