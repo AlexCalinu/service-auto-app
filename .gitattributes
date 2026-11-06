@@ -1,0 +1,3 @@
+# Paginile Jinja2 din templates/ nu se numara la statistica de limbaje,
+# ca proiectul sa apara pe GitHub ca Python (limbajul principal).
+templates/*.html linguist-detectable=false
